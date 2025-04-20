@@ -246,34 +246,6 @@ Example:
 ```
 
 ### update-role
-
-### get-member-count
-Gets the total number of members in a specific server.
-
-Parameters:
-- `server` (optional): Server name or ID (required if bot is in multiple servers)
-
-Example:
-```json
-{
-  "server": "My Cool Server"
-}
-```
-
-### get-role-member-count
-Gets the number of members that have a specific role in a server.
-
-Parameters:
-- `server` (optional): Server name or ID (required if bot is in multiple servers)
-- `role`: Role name or ID
-
-Example:
-```json
-{
-  "server": "My Cool Server",
-  "role": "Moderator"
-}
-```
 Updates an existing role in a server.
 
 Parameters:
