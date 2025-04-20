@@ -99,6 +99,173 @@ Example:
 }
 ```
 
+### list-servers
+Lists all servers (guilds) the bot is currently connected to.
+
+Parameters:
+- None
+
+Example:
+```json
+{}
+```
+
+### list-channels
+Lists all text channels in a specific server.
+
+Parameters:
+- `server` (optional): Server name or ID (required if bot is in multiple servers)
+
+Example:
+```json
+{
+  "server": "My Cool Server"
+}
+```
+
+### create-channel
+Creates a new text channel in a specific server.
+
+Parameters:
+- `server` (optional): Server name or ID (required if bot is in multiple servers)
+- `channelName`: Name for the new text channel
+
+Example:
+```json
+{
+  "server": "My Cool Server",
+  "channelName": "new-project-discussion"
+}
+```
+
+### read-multiple-channels
+Reads recent messages from multiple text channels in a server.
+
+Parameters:
+- `server` (optional): Server name or ID (required if bot is in multiple servers)
+- `channels` (optional): List of channel names or IDs (defaults to all text channels if omitted)
+- `limitPerChannel` (optional): Max messages per channel (default: 10, max: 50)
+
+Example (read from specific channels):
+```json
+{
+  "server": "My Cool Server",
+  "channels": ["general", "announcements"],
+  "limitPerChannel": 5
+}
+```
+
+Example (read from all channels):
+```json
+{
+  "server": "My Cool Server",
+  "limitPerChannel": 3
+}
+```
+
+### list-roles
+Lists all roles in a specific server.
+
+Parameters:
+- `server` (optional): Server name or ID (required if bot is in multiple servers)
+
+Example:
+```json
+{
+  "server": "My Cool Server"
+}
+```
+
+### assign-role
+Assigns a role to a user in a server.
+
+Parameters:
+- `server` (optional): Server name or ID (required if bot is in multiple servers)
+- `user`: User name#discriminator, user ID, or user mention
+- `role`: Role name or ID
+
+Example:
+```json
+{
+  "server": "My Cool Server",
+  "user": "SomeUser#1234",
+  "role": "Moderator"
+}
+```
+
+### remove-role
+Removes a role from a user in a server.
+
+Parameters:
+- `server` (optional): Server name or ID (required if bot is in multiple servers)
+- `user`: User name#discriminator, user ID, or user mention
+- `role`: Role name or ID
+
+Example:
+```json
+{
+  "server": "My Cool Server",
+  "user": "SomeUser#1234",
+  "role": "Moderator"
+}
+```
+
+### create-role
+Creates a new role in a server.
+
+Parameters:
+- `server` (optional): Server name or ID (required if bot is in multiple servers)
+- `roleName`: Name for the new role
+- `color` (optional): Hex color code (e.g., "#FF0000")
+- `permissions` (optional): List of permission names (e.g., ["SendMessages", "ManageMessages"])
+- `mentionable` (optional): Boolean, whether the role is mentionable (default: false)
+
+Example:
+```json
+{
+  "server": "My Cool Server",
+  "roleName": "Team Alpha",
+  "color": "#3498db",
+  "mentionable": true
+}
+```
+
+### delete-role
+Deletes a role from a server.
+
+Parameters:
+- `server` (optional): Server name or ID (required if bot is in multiple servers)
+- `role`: Role name or ID to delete
+
+Example:
+```json
+{
+  "server": "My Cool Server",
+  "role": "Old Role Name"
+}
+```
+
+### update-role
+Updates an existing role in a server.
+
+Parameters:
+- `server` (optional): Server name or ID (required if bot is in multiple servers)
+- `role`: Role name or ID to update
+- `newName` (optional): New name for the role
+- `newColor` (optional): New hex color code
+- `newPermissions` (optional): New list of permission names (replaces existing)
+- `newMentionable` (optional): New mentionable status
+
+Example:
+```json
+{
+  "server": "My Cool Server",
+  "role": "Team Alpha",
+  "newName": "Team Bravo",
+  "newColor": "#e67e22"
+}
+```
+
 ## Development
 
 1. Install development dependencies:
