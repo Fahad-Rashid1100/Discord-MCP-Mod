@@ -236,6 +236,17 @@ const UpdateRoleSchema = z.object({
 });
 // --- End Role Management Schemas ---
 
+// --- Member Count Schemas ---
+const GetMemberCountSchema = z.object({
+  server: z.string().optional().describe('Server name or ID (optional if bot is only in one server)'),
+});
+
+const GetRoleMemberCountSchema = z.object({
+  server: z.string().optional().describe('Server name or ID (optional if bot is only in one server)'),
+  role: z.string().describe('Role name or ID'),
+});
+// --- End Member Count Schemas ---
+
 // Create server instance
 const server = new Server(
   {
@@ -506,6 +517,40 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       // --- End Role Management Tools ---
+      // --- Member Count Tools ---
+      {
+        name: "get-member-count",
+        description: "Get the total number of members in a specific server",
+        inputSchema: {
+          type: "object",
+          properties: {
+            server: {
+              type: "string",
+              description: 'Server name or ID (optional if bot is only in one server)',
+            },
+          },
+          required: [],
+        },
+      },
+      {
+        name: "get-role-member-count",
+        description: "Get the number of members that have a specific role in a server",
+        inputSchema: {
+          type: "object",
+          properties: {
+            server: {
+              type: "string",
+              description: 'Server name or ID (optional if bot is only in one server)',
+            },
+            role: {
+              type: "string",
+              description: 'Role name or ID',
+            },
+          },
+          required: ["role"],
+        },
+      },
+      // --- End Member Count Tools ---
     ],
   };
 });
@@ -807,6 +852,40 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         };
       }
       // --- End Role Management Handlers ---
+
+      // --- Member Count Handlers ---
+      case "get-member-count": {
+        const { server: serverIdentifier } = GetMemberCountSchema.parse(args);
+        const guild = await findGuild(serverIdentifier);
+        // Ensure member count is up-to-date by fetching the guild object again or fetching members
+        await guild.members.fetch(); // Fetching members often updates the count implicitly
+        const memberCount = guild.memberCount;
+
+        return {
+          content: [{
+            type: "text",
+            text: `Server "${guild.name}" has ${memberCount} members.`,
+          }],
+        };
+      }
+
+      case "get-role-member-count": {
+        const { server: serverIdentifier, role: roleIdentifier } = GetRoleMemberCountSchema.parse(args);
+        const guild = await findGuild(serverIdentifier);
+        const role = await findRole(roleIdentifier, guild.id);
+
+        // Fetch all members to ensure the cache is populated for accurate filtering
+        await guild.members.fetch();
+        const membersWithRole = guild.members.cache.filter(member => member.roles.cache.has(role.id));
+
+        return {
+          content: [{
+            type: "text",
+            text: `There are ${membersWithRole.size} members with the role "${role.name}" in server "${guild.name}".`,
+          }],
+        };
+      }
+      // --- End Member Count Handlers ---
 
       default:
         throw new Error(`Unknown tool: ${name}`);
